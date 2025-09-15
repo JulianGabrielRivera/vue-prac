@@ -1,15 +1,18 @@
-<script>
-export default {
-  props: {
-    restaurant: {
-      type: Object,
-      required: true,
-    },
-  },
-  emits: ['delete-restaurant'],
-  computed: {
-    statusColor() {
-      switch (this.restaurant.status) {
+<script setup lang="ts">
+import type { Restaurant } from '@/types'
+import { computed } from 'vue'
+type PropTypes = {
+  restaurant:Restaurant
+}
+const props = defineProps<PropTypes>()
+// const emits = defineEmits()
+const emits = defineEmits<{
+  (e: 'delete-restaurant', restaurant:Restaurant):void
+}>()
+
+    const statusColor = computed (() =>{
+      
+      {switch (props.restaurant.status) {
         case 'Want to Try':
           return 'is-warning'
         case 'Recommended':
@@ -19,14 +22,16 @@ export default {
         default:
           return ''
       }
-    },
-  },
-  methods: {
-    deleteRestaurant() {
-      this.$emit('delete-restaurant', this.restaurant)
-    },
-  },
-}
+    }
+    })
+
+
+    const deleteRestaurant = () => {
+      // this.$emit('delete-restaurant', this.restaurant)
+      emits('delete-restaurant', props.restaurant)
+    }
+ 
+
 </script>
 
 <template>

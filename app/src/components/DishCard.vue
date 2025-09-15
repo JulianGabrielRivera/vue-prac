@@ -1,15 +1,21 @@
-<script>
-export default {
-  props: {
-    dish: {
-      type: Object,
-      required: true,
-    },
-  },
-  emits: ['delete-dish'],
-  computed: {
-    statusColor() {
-      switch (this.dish.status) {
+<script setup lang="ts">
+import type { Dish } from '@/types'
+import {computed} from 'vue'
+
+
+type PropTypes = {
+  dish:Dish
+}
+const props = defineProps<PropTypes>()
+
+const emits = defineEmits<{
+  (e: 'delete-dish', dish:Dish ) :void
+  (e: 'edit-dish', dish:Dish):void
+}>()
+
+
+   const statusColor = computed(()=> {
+      switch (props.dish.status) {
         case 'Want to Try':
           return 'is-warning'
         case 'Recommended':
@@ -19,14 +25,16 @@ export default {
         default:
           return ''
       }
-    },
-  },
-  methods: {
-    deleteDish() {
-      this.$emit('delete-dish', this.dish)
-    },
-  },
-}
+   })
+   const editDish = () =>{
+emits('edit-dish',props.dish)
+   }
+  
+   const deleteDish = () => {
+      emits('delete-dish', props.dish)
+    }
+  
+
 </script>
 
 <template>
@@ -44,6 +52,8 @@ export default {
         </p>
         <div>
           <button @click="deleteDish" class="button is-small is-danger is-light">Delete</button>
+                    <button @click="editDish" class="button is-small is-danger is-light">Edit</button>
+
         </div>
       </div>
     </div>
